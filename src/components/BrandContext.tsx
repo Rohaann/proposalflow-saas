@@ -32,6 +32,23 @@ const BrandContext = createContext<BrandContextType | undefined>(undefined);
 
 export function BrandProvider({ children }: { children: ReactNode }) {
   const [brand, setBrand] = useState<BrandSettings>(defaultBrand);
+  const [mounted, setMounted] = useState(false);
+
+  React.useEffect(() => {
+    const saved = localStorage.getItem("proposalflow_brand");
+    if (saved) {
+      try {
+        setBrand(JSON.parse(saved));
+      } catch (e) {}
+    }
+    setMounted(true);
+  }, []);
+
+  React.useEffect(() => {
+    if (mounted) {
+      localStorage.setItem("proposalflow_brand", JSON.stringify(brand));
+    }
+  }, [brand, mounted]);
 
   const formatCurrency = (amount: number) => {
     const symbols: Record<Currency, string> = {

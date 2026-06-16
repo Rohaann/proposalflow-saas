@@ -2,6 +2,8 @@
 
 import { useState } from "react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
+import { useAuth } from "@/components/AuthContext";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { motion, AnimatePresence } from "framer-motion";
@@ -41,6 +43,8 @@ export default function LandingPage() {
   const [isGenerating, setIsGenerating] = useState(false);
   const [showSignupPrompt, setShowSignupPrompt] = useState(false);
   const [isContractFixed, setIsContractFixed] = useState(false);
+  const { user } = useAuth();
+  const router = useRouter();
 
   const handleGenerate = () => {
     if (!quickstartText.trim()) return;
@@ -53,8 +57,12 @@ export default function LandingPage() {
 
     setTimeout(() => {
       setIsGenerating(false);
-      setShowSignupPrompt(true);
-    }, 2000);
+      if (user) {
+        router.push('/dashboard/deals/new');
+      } else {
+        setShowSignupPrompt(true);
+      }
+    }, 1500);
   };
 
   return (
