@@ -3,7 +3,7 @@
 import { useState, useEffect } from "react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { PlusCircle, Search, MoreHorizontal, FileText, FileSignature, Receipt, ShieldAlert, Loader2 } from "lucide-react";
+import { PlusCircle, Search, MoreHorizontal, FileText, FileSignature, Receipt, ShieldAlert, Loader2, Activity, Users } from "lucide-react";
 import Link from "next/link";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
