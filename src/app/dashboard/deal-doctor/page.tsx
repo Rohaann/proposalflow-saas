@@ -8,7 +8,9 @@ import Link from "next/link";
 import { Progress } from "@/components/ui/progress";
 import { useSearchParams } from "next/navigation";
 
-export default function DealDoctorPage() {
+import { Suspense } from 'react';
+
+function DealDoctorContent() {
   const searchParams = useSearchParams();
   const id = searchParams.get("id");
 
@@ -172,5 +174,13 @@ export default function DealDoctorPage() {
         </Card>
       </div>
     </div>
+  );
+}
+
+export default function DealDoctorPage() {
+  return (
+    <Suspense fallback={<div className="p-8">Loading Deal Doctor...</div>}>
+      <DealDoctorContent />
+    </Suspense>
   );
 }
