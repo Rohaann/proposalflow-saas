@@ -63,7 +63,7 @@ export default function SettingsPage() {
                 <Label htmlFor="currency">Default Currency</Label>
                 <Select 
                   value={brand.currency} 
-                  onValueChange={(val: Currency) => setBrand({ ...brand, currency: val })}
+                  onValueChange={(val) => setBrand({ ...brand, currency: (val as Currency) || "USD" })}
                 >
                   <SelectTrigger id="currency">
                     <SelectValue placeholder="Select currency" />
