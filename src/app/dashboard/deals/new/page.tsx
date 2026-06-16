@@ -290,7 +290,7 @@ Total estimated investment is ${derivedBudget}.
                         </div>
                         <div className="space-y-2">
                           <Label htmlFor="projectType">Project Type</Label>
-                          <Select required onValueChange={setProjectType}>
+                          <Select required onValueChange={(val) => setProjectType(val || "")}>
                             <SelectTrigger id="projectType">
                               <SelectValue placeholder="Select type" />
                             </SelectTrigger>
