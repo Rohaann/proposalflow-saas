@@ -10,7 +10,7 @@ import { Badge } from "@/components/ui/badge";
 import { createClient } from "@/lib/supabase/client";
 import { useBrand } from "@/components/BrandContext";
 import { formatDistanceToNow } from "date-fns";
-import { motion } from "framer-motion";
+import { motion, Variants } from "framer-motion";
 import { LineChart, Line, ResponsiveContainer } from "recharts";
 
 const supabase = createClient();
@@ -23,7 +23,7 @@ const sparklineData2 = [
   { value: 200 }, { value: 400 }, { value: 350 }, { value: 600 }, { value: 800 }
 ];
 
-const containerVariants = {
+const containerVariants: Variants = {
   hidden: { opacity: 0 },
   visible: {
     opacity: 1,
@@ -31,7 +31,7 @@ const containerVariants = {
   }
 };
 
-const itemVariants = {
+const itemVariants: Variants = {
   hidden: { opacity: 0, y: 20 },
   visible: { opacity: 1, y: 0, transition: { duration: 0.5, ease: "easeOut" } }
 };

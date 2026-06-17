@@ -21,9 +21,9 @@ export async function generateContent(prompt: string, system: string, modelName:
       prompt,
     });
     return text;
-  } catch (error) {
+  } catch (error: any) {
     console.error("AI Generation Error:", error);
-    throw new Error("Failed to generate content.");
+    throw new Error(`Failed to generate content: ${error.message || "Unknown error"}`);
   }
 }
 
@@ -36,8 +36,8 @@ export async function generateStructuredData<T>(prompt: string, system: string, 
       schema,
     });
     return object as T;
-  } catch (error) {
+  } catch (error: any) {
     console.error("AI Generation Error:", error);
-    throw new Error("Failed to generate structured data.");
+    throw new Error(`Failed to generate structured data: ${error.message || "Unknown error"}`);
   }
 }

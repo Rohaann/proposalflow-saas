@@ -36,7 +36,13 @@ export async function generateProposalAction(rawClientBrief: string, rawProjectT
   
   const system = `You are a professional proposal writer for freelancers and agencies. Create a highly persuasive, detailed business proposal formatted in Markdown. Include sections like Executive Summary, Objectives, Scope of Work, and Timeline. Use a formal yet modern tone.`;
   const prompt = `Project Type: ${projectType}\nClient Brief: ${clientBrief}\nGenerate the proposal:`;
-  return await generateContent(prompt, system, modelName);
+  
+  try {
+    return await generateContent(prompt, system, modelName);
+  } catch (error) {
+    console.warn("Falling back to mock proposal due to AI error.");
+    return `## Executive Summary\n\nThank you for considering our services for your **${projectType}** project. Based on your brief, we understand you need a comprehensive solution that delivers high impact.\n\n## Scope of Work\n\n1. **Discovery & Strategy**: Initial research and alignment.\n2. **Execution Phase**: Developing the core deliverables.\n3. **Review & Handover**: Revisions and final deployment.\n\n## Timeline & Investment\n\nThe estimated timeline for this project is 4-6 weeks, requiring a total investment of $5,000. We look forward to partnering with you!\n\n*(Note: This is mock data because the AI API key is missing or failed.)*`;
+  }
 }
 
 export async function generateContractAction(rawClientBrief: string, rawProjectType: string, rawModelName?: string) {
@@ -44,7 +50,13 @@ export async function generateContractAction(rawClientBrief: string, rawProjectT
   
   const system = `You are a legal assistant specializing in freelance and agency contracts. Generate a standard Master Services Agreement (MSA) formatted in Markdown. Include sections like Services, Payment Terms, Intellectual Property, Confidentiality, and Termination. Ensure it sounds professional.`;
   const prompt = `Project Type: ${projectType}\nClient Brief: ${clientBrief}\nGenerate the contract:`;
-  return await generateContent(prompt, system, modelName);
+  
+  try {
+    return await generateContent(prompt, system, modelName);
+  } catch (error) {
+    console.warn("Falling back to mock contract due to AI error.");
+    return `# Master Services Agreement\n\nThis Master Services Agreement ("Agreement") is entered into for the **${projectType}** project.\n\n## 1. Services\nProvider agrees to perform the services as outlined in the accepted Proposal.\n\n## 2. Payment Terms\nClient agrees to pay the fees according to the schedule. Invoices are net-30.\n\n## 3. Intellectual Property\nUpon full payment, Client shall own the final deliverables.\n\n## 4. Confidentiality\nBoth parties agree to keep all proprietary information confidential.\n\n*(Note: This is mock data because the AI API key is missing or failed.)*`;
+  }
 }
 
 export async function generateInvoiceItemsAction(rawClientBrief: string, rawBudget: number, rawModelName?: string) {
@@ -57,8 +69,18 @@ export async function generateInvoiceItemsAction(rawClientBrief: string, rawBudg
     items: z.array(InvoiceItemSchema)
   });
 
-  const data = await generateStructuredData<{ items: any }>(prompt, system, schema, modelName);
-  return data.items;
+  try {
+    const data = await generateStructuredData<{ items: any }>(prompt, system, schema, modelName);
+    return data.items;
+  } catch (error) {
+    console.warn("Falling back to mock invoice items due to AI error.");
+    // Generate 3 random line items that sum up to the budget roughly
+    return [
+      { description: "Strategy and Planning", quantity: 1, unitPrice: budget * 0.2 },
+      { description: "Core Execution and Development", quantity: 1, unitPrice: budget * 0.6 },
+      { description: "Testing and Deployment", quantity: 1, unitPrice: budget * 0.2 }
+    ];
+  }
 }
 
 export async function generateDealDoctorAction(rawProposalContent: string, rawModelName?: string) {
@@ -78,7 +100,16 @@ Return your evaluation as structured JSON containing:
     feedback: z.string()
   });
 
-  return await generateStructuredData<z.infer<typeof schema>>(prompt, system, schema, modelName);
+  try {
+    return await generateStructuredData<z.infer<typeof schema>>(prompt, system, schema, modelName);
+  } catch (error) {
+    console.warn("Falling back to mock deal doctor due to AI error.");
+    return {
+      risk_score: 85,
+      risk_level: "Low",
+      feedback: "This proposal looks solid! The scope is well-defined and the payment terms are clear. Make sure to double-check the timeline dates before sending. (Mock Response)"
+    };
+  }
 }
 
 export async function generatePricingIntelligenceAction(rawService: string, rawExperience: string, rawCountry: string, rawModelName?: string) {
@@ -100,5 +131,15 @@ Return JSON containing:
     message: z.string()
   });
 
-  return await generateStructuredData<z.infer<typeof schema>>(prompt, system, schema, modelName);
+  try {
+    return await generateStructuredData<z.infer<typeof schema>>(prompt, system, schema, modelName);
+  } catch (error) {
+    console.warn("Falling back to mock pricing due to AI error.");
+    return {
+      low: "$2,500",
+      average: "$5,000",
+      premium: "$12,000+",
+      message: `For ${service} in ${country} with your experience, focus on value-based pricing rather than hourly rates to hit that premium tier. (Mock Response)`
+    };
+  }
 }
