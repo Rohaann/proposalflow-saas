@@ -54,7 +54,7 @@ export default function PricingIntelligencePage() {
             <CardContent className="space-y-6">
               <div className="space-y-2">
                 <Label htmlFor="service">Service Type</Label>
-                <Select required value={service} onValueChange={setService}>
+                <Select required value={service} onValueChange={(val) => setService(val || "")}>
                   <SelectTrigger id="service">
                     <SelectValue placeholder="Select service" />
                   </SelectTrigger>
@@ -69,7 +69,7 @@ export default function PricingIntelligencePage() {
               </div>
               <div className="space-y-2">
                 <Label htmlFor="experience">Experience Level</Label>
-                <Select required value={experience} onValueChange={setExperience}>
+                <Select required value={experience} onValueChange={(val) => setExperience(val || "")}>
                   <SelectTrigger id="experience">
                     <SelectValue placeholder="Select level" />
                   </SelectTrigger>
@@ -83,7 +83,7 @@ export default function PricingIntelligencePage() {
               </div>
               <div className="space-y-2">
                 <Label htmlFor="country">Target Market (Client Country)</Label>
-                <Select required value={country} onValueChange={setCountry}>
+                <Select required value={country} onValueChange={(val) => setCountry(val || "")}>
                   <SelectTrigger id="country">
                     <SelectValue placeholder="Select country" />
                   </SelectTrigger>
