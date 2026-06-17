@@ -7,9 +7,11 @@ import { Briefcase, FileText, FileSignature, DollarSign, Loader2 } from "lucide-
 import Link from "next/link";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
-import { supabase } from "@/lib/supabase";
+import { createClient } from "@/lib/supabase/client";
 import { useBrand } from "@/components/BrandContext";
 import { formatDistanceToNow } from "date-fns";
+
+const supabase = createClient();
 
 export default function DashboardPage() {
   const { formatCurrency } = useBrand();

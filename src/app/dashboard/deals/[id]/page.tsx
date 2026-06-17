@@ -9,10 +9,12 @@ import { useState, useEffect } from "react";
 import { Textarea } from "@/components/ui/textarea";
 import { motion, AnimatePresence } from "framer-motion";
 import { useBrand } from "@/components/BrandContext";
-import { supabase } from "@/lib/supabase/client";
+import { createClient } from "@/lib/supabase/client";
 import { useParams } from "next/navigation";
 import { formatDistanceToNow } from "date-fns";
 import { sendProposalEmailAction, sendFollowUpEmailAction } from "@/app/actions/email";
+
+const supabase = createClient();
 
 type TabType = "overview" | "proposal" | "contract" | "invoice" | "portal" | "payments" | "activity";
 

@@ -4,10 +4,12 @@ import { useEffect, useState } from "react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from "@/components/ui/card";
 import { Users, Link as LinkIcon, ExternalLink, CheckCircle2, Clock } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { supabase } from "@/lib/supabase";
+import { createClient } from "@/lib/supabase/client";
 import { Badge } from "@/components/ui/badge";
 import Link from "next/link";
 import { useAuth } from "@/components/AuthContext";
+
+const supabase = createClient();
 
 export default function PortalPage() {
   const [deals, setDeals] = useState<any[]>([]);

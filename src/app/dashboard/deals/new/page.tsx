@@ -12,10 +12,12 @@ import { ArrowLeft, Sparkles, Loader2, FileText, CheckCircle2, ShieldAlert, Aler
 import Link from "next/link";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { motion, AnimatePresence } from "framer-motion";
-import { supabase } from "@/lib/supabase/client";
+import { createClient } from "@/lib/supabase/client";
 import { Progress } from "@/components/ui/progress";
 import { generateProposalAction, generateContractAction, generateInvoiceItemsAction, generateDealDoctorAction } from "@/app/actions/ai";
 import { createDeal } from "@/app/actions/deals";
+
+const supabase = createClient();
 
 const EXAMPLES = {
   web: "Need a SaaS landing page redesign. Budget $3,500. Must be done in 4 weeks. Mobile responsive, CMS integration (Webflow preferred), clean modern aesthetic with conversion-focused copy. Need 5 sections: hero, features, pricing, testimonials, CTA.",

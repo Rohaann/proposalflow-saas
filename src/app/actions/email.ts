@@ -1,7 +1,7 @@
 "use server";
 
 import { Resend } from "resend";
-import { supabase } from "@/lib/supabase/client"; // For saving activity logs
+import { createClient } from "@/lib/supabase/server";
 
 const resend = new Resend(process.env.RESEND_API_KEY);
 
@@ -10,6 +10,7 @@ const FROM_EMAIL = "ProposalFlow AI <onboarding@resend.dev>";
 
 export async function sendProposalEmailAction(dealId: string, clientEmail: string, clientName: string, portalUrl: string) {
   try {
+    const supabase = await createClient();
     const { data, error } = await resend.emails.send({
       from: FROM_EMAIL,
       to: clientEmail,
@@ -43,6 +44,7 @@ export async function sendProposalEmailAction(dealId: string, clientEmail: strin
 
 export async function sendFollowUpEmailAction(dealId: string, clientEmail: string, clientName: string, portalUrl: string) {
   try {
+    const supabase = await createClient();
     const { data, error } = await resend.emails.send({
       from: FROM_EMAIL,
       to: clientEmail,
