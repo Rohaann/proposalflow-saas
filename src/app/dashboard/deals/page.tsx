@@ -128,15 +128,15 @@ export default function DealsPage() {
                         </DropdownMenuTrigger>
                         <DropdownMenuContent align="end" className="w-[200px]">
                           <DropdownMenuLabel>Deal Actions</DropdownMenuLabel>
-                          <DropdownMenuItem onClick={() => window.location.href = `/dashboard/proposals/${deal.id}`}>
+                          <DropdownMenuItem onClick={() => window.location.href = `/dashboard/deals/${deal.id}`}>
                             <ShieldAlert className="mr-2 h-4 w-4 text-orange-500" />
-                            View Deal Package
+                            View Deal Hub
                           </DropdownMenuItem>
                           <DropdownMenuItem onClick={() => window.location.href = `/dashboard/deal-doctor?id=${deal.id}`}>
                             <Activity className="mr-2 h-4 w-4 text-blue-500" />
                             Deal Doctor Analysis
                           </DropdownMenuItem>
-                          <DropdownMenuItem onClick={() => window.location.href = `/dashboard/portal`}>
+                          <DropdownMenuItem onClick={() => window.location.href = `/portal/${deal.id}`}>
                             <Users className="mr-2 h-4 w-4 text-purple-500" />
                             Client Portal
                           </DropdownMenuItem>

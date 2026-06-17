@@ -18,7 +18,7 @@ export default function ClientPortalPage() {
   const [activeTab, setActiveTab] = useState<"proposal" | "contract" | "invoice">("proposal");
   const [isSigned, setIsSigned] = useState(false);
   const [signature, setSignature] = useState("");
-  const [isPaying, setIsPaying] = useState(false);
+
 
   useEffect(() => {
     const fetchDeal = async () => {
@@ -27,6 +27,17 @@ export default function ClientPortalPage() {
       if (data) {
         setDeal(data);
         setIsSigned(data.status === 'Signed' || data.status === 'Paid');
+        
+        // ANTI-GHOSTING TRACKER: If the deal is "Sent" and the client just opened it,
+        // mark it as "Viewed" so the agency owner knows!
+        if (data.status === 'Sent') {
+          await supabase.from('deals').update({ status: 'Viewed' }).eq('id', id);
+          await supabase.from('activity_logs').insert({
+            deal_id: id,
+            action: 'Client Viewed Portal',
+            details: 'The client opened the portal link.'
+          });
+        }
       }
       setLoading(false);
     };
@@ -38,19 +49,15 @@ export default function ClientPortalPage() {
     if (signature.trim().length > 2) {
       setIsSigned(true);
       await supabase.from('deals').update({ status: 'Signed' }).eq('id', id);
+      await supabase.from('activity_logs').insert({
+        deal_id: id,
+        action: 'Contract Signed',
+        details: `Electronically signed by: ${signature}`
+      });
       setActiveTab("invoice");
     }
   };
 
-  const handlePay = () => {
-    setIsPaying(true);
-    setTimeout(async () => {
-      await supabase.from('deals').update({ status: 'Paid' }).eq('id', id);
-      setIsPaying(false);
-      alert("Payment successful! The deal is now complete.");
-      window.location.reload();
-    }, 1500);
-  };
 
   if (loading) {
     return (
@@ -164,13 +171,15 @@ export default function ClientPortalPage() {
                     {activeTab === "invoice" && "A 50% deposit is required to start."}
                   </CardDescription>
                 </div>
-                <Button variant="outline" size="sm" className="hidden sm:flex">
+                <Button variant="outline" size="sm" className="hidden sm:flex" onClick={() => {
+                  import("@/lib/export-pdf").then(m => m.exportToPDF("portal-content", `${deal.client_name}-document.pdf`));
+                }}>
                   <Download className="mr-2 h-4 w-4" />
                   PDF
                 </Button>
               </CardHeader>
               
-              <CardContent className="flex-1 p-8 font-serif leading-relaxed text-sm sm:text-base bg-background whitespace-pre-wrap">
+              <CardContent id="portal-content" className="flex-1 p-8 font-serif leading-relaxed text-sm sm:text-base bg-background whitespace-pre-wrap">
                 {activeTab === "proposal" && (deal.proposal_content || "No proposal generated.")}
                 {activeTab === "contract" && (deal.contract_content || "No contract generated.")}
                 {activeTab === "invoice" && (
@@ -250,16 +259,29 @@ export default function ClientPortalPage() {
                 </CardFooter>
               )}
 
-              {activeTab === "invoice" && deal.status !== 'Paid' && (
-                <CardFooter className="bg-primary/5 border-t border-primary/20 p-6 flex flex-col sm:flex-row justify-between items-center gap-4">
-                  <div className="text-center sm:text-left">
-                    <span className="text-muted-foreground text-sm font-medium">Amount Due</span>
+              {activeTab === "invoice" && deal.status !== 'Paid' && deal.status !== 'Partially Paid' && (
+                <CardFooter className="bg-primary/5 border-t border-primary/20 p-6 flex flex-col justify-center items-center gap-4">
+                  <div className="text-center">
+                    <span className="text-muted-foreground text-sm font-medium">Balance Due</span>
                     <div className="text-3xl font-black text-primary">{new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(depositAmount)}</div>
                   </div>
-                  <Button size="lg" className="px-8 shadow-lg w-full sm:w-auto h-12 text-lg" onClick={handlePay} disabled={isPaying}>
-                    {isPaying ? <Loader2 className="mr-2 h-5 w-5 animate-spin" /> : <CreditCard className="mr-2 h-5 w-5" />}
-                    Pay via Stripe
+                  <Button size="lg" className="w-full sm:w-auto" onClick={async () => {
+                    // Simple mockup for Stripe Payment Link
+                    alert("Redirecting to Stripe Checkout...");
+                    // In a real implementation:
+                    // window.location.href = data.stripe_url;
+                  }}>
+                    <CreditCard className="mr-2 h-5 w-5" /> Pay Deposit via Stripe
                   </Button>
+                </CardFooter>
+              )}
+
+              {activeTab === "invoice" && deal.status === 'Partially Paid' && (
+                <CardFooter className="bg-yellow-500/10 border-t border-yellow-500/20 p-6 flex flex-col justify-center items-center gap-2">
+                  <div className="text-center">
+                    <span className="text-muted-foreground text-sm font-medium">Partially Paid</span>
+                  </div>
+                  <p className="text-sm text-muted-foreground text-center mt-2">A payment has been received and logged by the vendor. Remaining balance may apply.</p>
                 </CardFooter>
               )}
 

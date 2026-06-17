@@ -143,7 +143,7 @@ export default function DashboardPage() {
                 {recentDeals.map((deal) => (
                   <TableRow key={deal.id}>
                     <TableCell className="font-medium">
-                      <Link href={`/dashboard/proposals/${deal.id}`} className="hover:underline hover:text-primary">
+                      <Link href={`/dashboard/deals/${deal.id}`} className="hover:underline hover:text-primary">
                         {deal.client_name}
                       </Link>
                     </TableCell>

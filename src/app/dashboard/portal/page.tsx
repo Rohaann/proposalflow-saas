@@ -67,8 +67,17 @@ export default function PortalPage() {
             <Card key={deal.id} className="flex flex-col justify-between">
               <CardHeader className="pb-3">
                 <div className="flex justify-between items-start">
-                  <Badge variant={deal.status === 'Signed' ? 'default' : 'secondary'} className="mb-2">
-                    {deal.status === 'Signed' ? <CheckCircle2 className="h-3 w-3 mr-1" /> : <Clock className="h-3 w-3 mr-1" />}
+                  <Badge 
+                    variant={deal.status === 'Signed' || deal.status === 'Paid' ? 'default' : deal.status === 'Viewed' ? 'outline' : 'secondary'} 
+                    className={`mb-2 ${deal.status === 'Viewed' ? 'border-primary text-primary bg-primary/5' : ''}`}
+                  >
+                    {deal.status === 'Signed' || deal.status === 'Paid' ? (
+                      <CheckCircle2 className="h-3 w-3 mr-1" />
+                    ) : deal.status === 'Viewed' ? (
+                      <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="mr-1"><path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z"/><circle cx="12" cy="12" r="3"/></svg>
+                    ) : (
+                      <Clock className="h-3 w-3 mr-1" />
+                    )}
                     {deal.status}
                   </Badge>
                   <span className="text-xs text-muted-foreground">

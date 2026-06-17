@@ -1,7 +1,7 @@
 "use client";
 
 import { createContext, useContext, useEffect, useState } from "react";
-import { supabase } from "@/lib/supabase";
+import { createClient } from "@/lib/supabase/client";
 import { User, Session } from "@supabase/supabase-js";
 import { useRouter, usePathname } from "next/navigation";
 
@@ -25,6 +25,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [isLoading, setIsLoading] = useState(true);
   const router = useRouter();
   const pathname = usePathname();
+  const supabase = createClient();
 
   useEffect(() => {
     // Get initial session
@@ -44,21 +45,9 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     return () => subscription.unsubscribe();
   }, []);
 
-  // Protect routes
-  useEffect(() => {
-    if (!isLoading) {
-      if (pathname.startsWith('/dashboard') && !user) {
-        router.push('/auth');
-      }
-      if (pathname === '/auth' && user) {
-        router.push('/dashboard');
-      }
-    }
-  }, [user, isLoading, pathname, router]);
-
   const signOut = async () => {
     await supabase.auth.signOut();
-    router.push('/');
+    router.push('/login');
   };
 
   return (

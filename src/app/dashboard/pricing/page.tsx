@@ -7,27 +7,32 @@ import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { BarChart3, Loader2, Info } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
+import { generatePricingIntelligenceAction } from "@/app/actions/ai";
 
 export default function PricingIntelligencePage() {
   const [isAnalyzing, setIsAnalyzing] = useState(false);
   const [results, setResults] = useState<any>(null);
+  
+  const [service, setService] = useState("");
+  const [experience, setExperience] = useState("");
+  const [country, setCountry] = useState("");
 
-  const handleAnalyze = (e: React.FormEvent) => {
+  const handleAnalyze = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (!service || !experience || !country) return;
+    
     setIsAnalyzing(true);
     setResults(null);
 
-    // Simulate AI API call
-    setTimeout(() => {
+    try {
+      const data = await generatePricingIntelligenceAction(service, experience, country);
+      setResults(data);
+    } catch (error) {
+      console.error(error);
+      alert("Failed to fetch pricing intelligence.");
+    } finally {
       setIsAnalyzing(false);
-      setResults({
-        low: "$2,000",
-        average: "$4,500",
-        premium: "$8,000+",
-        message: "You may be undercharging. The average market rate for Web Design in the US for a Mid-Level freelancer is $4,500. Consider raising your base rate.",
-        status: "undercharging"
-      });
-    }, 1500);
+    }
   };
 
   return (
@@ -49,45 +54,45 @@ export default function PricingIntelligencePage() {
             <CardContent className="space-y-6">
               <div className="space-y-2">
                 <Label htmlFor="service">Service Type</Label>
-                <Select required>
+                <Select required value={service} onValueChange={setService}>
                   <SelectTrigger id="service">
                     <SelectValue placeholder="Select service" />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="web-design">Web Design</SelectItem>
-                    <SelectItem value="web-dev">Web Development</SelectItem>
-                    <SelectItem value="seo">SEO</SelectItem>
-                    <SelectItem value="copywriting">Copywriting</SelectItem>
-                    <SelectItem value="consulting">Consulting</SelectItem>
+                    <SelectItem value="Web Design">Web Design</SelectItem>
+                    <SelectItem value="Web Development">Web Development</SelectItem>
+                    <SelectItem value="SEO">SEO</SelectItem>
+                    <SelectItem value="Copywriting">Copywriting</SelectItem>
+                    <SelectItem value="Consulting">Consulting</SelectItem>
                   </SelectContent>
                 </Select>
               </div>
               <div className="space-y-2">
                 <Label htmlFor="experience">Experience Level</Label>
-                <Select required>
+                <Select required value={experience} onValueChange={setExperience}>
                   <SelectTrigger id="experience">
                     <SelectValue placeholder="Select level" />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="junior">Junior (1-2 years)</SelectItem>
-                    <SelectItem value="mid">Mid-Level (3-5 years)</SelectItem>
-                    <SelectItem value="senior">Senior (5+ years)</SelectItem>
-                    <SelectItem value="expert">Expert / Agency</SelectItem>
+                    <SelectItem value="Junior (1-2 years)">Junior (1-2 years)</SelectItem>
+                    <SelectItem value="Mid-Level (3-5 years)">Mid-Level (3-5 years)</SelectItem>
+                    <SelectItem value="Senior (5+ years)">Senior (5+ years)</SelectItem>
+                    <SelectItem value="Expert / Agency">Expert / Agency</SelectItem>
                   </SelectContent>
                 </Select>
               </div>
               <div className="space-y-2">
                 <Label htmlFor="country">Target Market (Client Country)</Label>
-                <Select required>
+                <Select required value={country} onValueChange={setCountry}>
                   <SelectTrigger id="country">
                     <SelectValue placeholder="Select country" />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="us">United States</SelectItem>
-                    <SelectItem value="uk">United Kingdom</SelectItem>
-                    <SelectItem value="ca">Canada</SelectItem>
-                    <SelectItem value="au">Australia</SelectItem>
-                    <SelectItem value="global">Global Average</SelectItem>
+                    <SelectItem value="United States">United States</SelectItem>
+                    <SelectItem value="United Kingdom">United Kingdom</SelectItem>
+                    <SelectItem value="Canada">Canada</SelectItem>
+                    <SelectItem value="Australia">Australia</SelectItem>
+                    <SelectItem value="Global Average">Global Average</SelectItem>
                   </SelectContent>
                 </Select>
               </div>
