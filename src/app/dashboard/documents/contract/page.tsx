@@ -122,10 +122,8 @@ export default function ContractGeneratorPage() {
               Generate Contract
             </Button>
             <Dialog open={isTemplatesOpen} onOpenChange={setIsTemplatesOpen}>
-              <DialogTrigger asChild>
-                <Button variant="outline" onClick={fetchTemplates} className="flex-1 sm:flex-none">
-                  <FolderOpen className="mr-2 h-4 w-4" /> Load Template
-                </Button>
+              <DialogTrigger render={<Button variant="outline" onClick={fetchTemplates} className="flex-1 sm:flex-none" />}>
+                <FolderOpen className="mr-2 h-4 w-4" /> Load Template
               </DialogTrigger>
               <DialogContent>
                 <DialogHeader>

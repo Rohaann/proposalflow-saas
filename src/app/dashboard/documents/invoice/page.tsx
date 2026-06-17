@@ -106,10 +106,8 @@ export default function InvoiceGeneratorPage() {
           </div>
           <div className="flex items-center gap-2">
             <Dialog open={isTemplatesOpen} onOpenChange={setIsTemplatesOpen}>
-              <DialogTrigger asChild>
-                <Button variant="outline" onClick={fetchTemplates}>
-                  <FolderOpen className="mr-2 h-4 w-4" /> Load Template
-                </Button>
+              <DialogTrigger render={<Button variant="outline" onClick={fetchTemplates} />}>
+                <FolderOpen className="mr-2 h-4 w-4" /> Load Template
               </DialogTrigger>
               <DialogContent>
                 <DialogHeader>
