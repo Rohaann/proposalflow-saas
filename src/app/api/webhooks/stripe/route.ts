@@ -3,12 +3,13 @@ import Stripe from "stripe";
 import { createClient } from "@supabase/supabase-js";
 
 // Webhooks don't have a user session, so we MUST use the Service Role Key to bypass RLS.
-const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!;
-const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY!;
-const supabase = createClient(supabaseUrl, supabaseServiceKey);
 
 // Since webhooks require a raw body, we handle it
 export async function POST(req: NextRequest) {
+  const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || '';
+  const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY || '';
+  const supabase = createClient(supabaseUrl, supabaseServiceKey);
+
   const stripe = new Stripe(process.env.STRIPE_SECRET_KEY as string, {
     apiVersion: "2023-10-16" as any,
   });
